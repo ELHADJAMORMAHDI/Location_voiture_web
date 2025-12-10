@@ -1,145 +1,40 @@
 {% extends 'base.html' %}
 
-{% block title %}Browse Cars - Location Voiture{% endblock %}
+{% block title %}قائمة السيارات - تأجير السيارات{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <h1 class="mb-4">Available Cars</h1>
-    
-    <div class="row">
-        <!-- Filters Sidebar -->
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Filters</h5>
-                    <form method="get" class="form">
-                        <!-- Search -->
-                        <div class="mb-3">
-                            <label class="form-label">Search</label>
-                            <input type="text" name="q" class="form-control" placeholder="Make, model..." value="{{ request.GET.q }}">
-                        </div>
-                        
-                        <!-- Fuel Type -->
-                        <div class="mb-3">
-                            <label class="form-label">Fuel Type</label>
-                            <select name="fuel" class="form-select">
-                                <option value="">All Types</option>
-                                {% for value, label in fuel_choices %}
-                                    <option value="{{ value }}" {% if request.GET.fuel == value %}selected{% endif %}>{{ label }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- Transmission -->
-                        <div class="mb-3">
-                            <label class="form-label">Transmission</label>
-                            <select name="transmission" class="form-select">
-                                <option value="">All Types</option>
-                                {% for value, label in transmission_choices %}
-                                    <option value="{{ value }}" {% if request.GET.transmission == value %}selected{% endif %}>{{ label }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        
-                        <!-- Price Range -->
-                        <div class="mb-3">
-                            <label class="form-label">Daily Rate</label>
-                            <div class="input-group">
-                                <input type="number" name="min_price" class="form-control" placeholder="Min" value="{{ request.GET.min_price }}">
-                            </div>
-                            <div class="input-group mt-2">
-                                <input type="number" name="max_price" class="form-control" placeholder="Max" value="{{ request.GET.max_price }}">
-                            </div>
-                        </div>
-                        
-                        <!-- Submit -->
-                        <button type="submit" class="btn btn-primary w-100">Filter</button>
-                        <a href="{% url 'cars:car_list' %}" class="btn btn-secondary w-100 mt-2">Clear Filters</a>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Cars Grid -->
-        <div class="col-md-9">
-            {% if cars %}
-                <div class="row">
-                    {% for car in cars %}
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100">
-                            {% if car.image %}
-                                <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car }}">
-                            {% else %}
-                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
-                                    <i class="fas fa-car fa-5x text-muted"></i>
-                                </div>
-                            {% endif %}
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">{{ car.year }} {{ car.make }} {{ car.model }}</h5>
-                                <p class="text-muted small">{{ car.registration_number }}</p>
-                                
-                                <!-- Features -->
-                                <div class="mb-3">
-                                    <span class="badge bg-primary">{{ car.get_fuel_type_display }}</span>
-                                    <span class="badge bg-secondary">{{ car.get_transmission_display }}</span>
-                                    <span class="badge bg-info">{{ car.seats }} Seats</span>
-                                </div>
-                                
-                                <!-- Price -->
-                                <div class="mb-3">
-                                    <h4 class="text-warning">${{ car.daily_rate }}<small class="text-muted">/day</small></h4>
-                                </div>
-                                
-                                <!-- Description -->
-                                {% if car.description %}
-                                    <p class="card-text small text-muted flex-grow-1">{{ car.description|truncatewords:15 }}</p>
-                                {% endif %}
-                                
-                                <!-- Button -->
-                                <a href="{% url 'cars:car_detail' car.id %}" class="btn btn-primary btn-sm">
-                                    View Details & Book
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                
-                <!-- Pagination -->
-                {% if is_paginated %}
-                <nav aria-label="Page navigation" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        {% if page_obj.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">First</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
-                            </li>
-                        {% endif %}
-                        
-                        <li class="page-item active">
-                            <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                        </li>
-                        
-                        {% if page_obj.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Last</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-                {% endif %}
+<h1>🚗 قائمة السيارات</h1>
+<hr>
+
+<div class="row">
+    {% for car in cars %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            {% if car.image %}
+                <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.name }}" style="height: 200px; object-fit: cover;">
             {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i>
-                    No cars found matching your criteria. Please try adjusting your filters.
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <span style="font-size: 60px;">🚗</span>
                 </div>
             {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ car.name }}</h5>
+                <p class="card-text">{{ car.description }}</p>
+                <p><strong>السعر:</strong> {{ car.price_per_day }} دج / يوم</p>
+                {% if car.available %}
+                    <span class="badge bg-success">متاحة</span>
+                {% else %}
+                    <span class="badge bg-danger">غير متاحة</span>
+                {% endif %}
+                <br><br>
+                <a href="{% url 'cars:car_detail' car.pk %}" class="btn btn-primary">التفاصيل</a>
+            </div>
         </div>
     </div>
+    {% empty %}
+    <div class="col-12">
+        <p class="alert alert-info">لا توجد سيارات</p>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}

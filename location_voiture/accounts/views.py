@@ -1,14 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
+from django.contrib.auth.models import User
 from .forms import SignUpForm, LoginForm
-from cars.models import Customer
-from cars.forms import CustomerProfileForm
 
 
+# 📝 تسجيل حساب جديد
 def signup(request):
-    """User registration."""
     if request.user.is_authenticated:
         return redirect('home')
     
@@ -17,16 +15,15 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('accounts:profile_setup')
+            return redirect('home')
     else:
         form = SignUpForm()
     
-    context = {'form': form}
-    return render(request, 'accounts/signup.html', context)
+    return render(request, 'accounts/signup.html', {'form': form})
 
 
+# 🔑 تسجيل الدخول
 def login_view(request):
-    """User login."""
     if request.user.is_authenticated:
         return redirect('home')
     
@@ -39,71 +36,23 @@ def login_view(request):
             
             if user is not None:
                 login(request, user)
-                next_url = request.GET.get('next', 'home')
-                return redirect(next_url)
+                return redirect('home')
             else:
-                form.add_error(None, 'Invalid username or password.')
+                form.add_error(None, 'اسم المستخدم أو كلمة المرور غير صحيحة')
     else:
         form = LoginForm()
     
-    context = {'form': form}
-    return render(request, 'accounts/login.html', context)
+    return render(request, 'accounts/login.html', {'form': form})
 
 
+# 🚪 تسجيل الخروج
 def logout_view(request):
-    """User logout."""
     logout(request)
     return redirect('home')
 
 
+# 👤 ملفي الشخصي
 @login_required
-def profile_setup(request):
-    """Complete customer profile setup."""
-    try:
-        customer = request.user.customer_profile
-        return redirect('cars:dashboard')
-    except Customer.DoesNotExist:
-        if request.method == 'POST':
-            form = CustomerProfileForm(request.POST)
-            if form.is_valid():
-                customer = form.save(commit=False)
-                customer.user = request.user
-                customer.save()
-                return redirect('cars:dashboard')
-        else:
-            form = CustomerProfileForm()
-        
-        context = {'form': form, 'step': 'setup'}
-        return render(request, 'accounts/profile_setup.html', context)
-
-
-@login_required
-def profile_edit(request):
-    """Edit customer profile."""
-    try:
-        customer = request.user.customer_profile
-    except Customer.DoesNotExist:
-        return redirect('accounts:profile_setup')
-    
-    if request.method == 'POST':
-        form = CustomerProfileForm(request.POST, instance=customer)
-        if form.is_valid():
-            form.save()
-            return redirect('cars:dashboard')
-    else:
-        form = CustomerProfileForm(instance=customer)
-    
-    context = {'form': form, 'step': 'edit'}
-    return render(request, 'accounts/profile_setup.html', context)
-
-
-@login_required
-def profile_view(request):
-    """View customer profile."""
-    try:
-        customer = request.user.customer_profile
-    except Customer.DoesNotExist:
-        return redirect('accounts:profile_setup')
-    
-    context = {'customer': customer}
-    return render(request, 'accounts/profile.html', context)
+def profile(request):
+    user = request.user
+    return render(request, 'accounts/profile.html', {'user': user})

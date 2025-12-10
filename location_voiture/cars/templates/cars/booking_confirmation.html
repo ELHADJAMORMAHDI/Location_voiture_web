@@ -1,137 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}Booking Confirmation - Location Voiture{% endblock %}
+{% block title %}تأكيد الحجز{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <!-- Success Message -->
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle"></i>
-                <strong>Booking Created Successfully!</strong>
-                <p class="mb-0">Your booking reference: <strong>{{ booking.booking_reference }}</strong></p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            
-            <!-- Booking Details Card -->
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Booking Details</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Booking Reference</h6>
-                            <h5>{{ booking.booking_reference }}</h5>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Status</h6>
-                            <span class="badge bg-warning text-dark">{{ booking.get_status_display }}</span>
-                        </div>
-                    </div>
-                    
-                    <hr>
-                    
-                    <!-- Vehicle Info -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Vehicle</h6>
-                            <p class="mb-0">
-                                <strong>{{ booking.car.year }} {{ booking.car.make }} {{ booking.car.model }}</strong><br>
-                                <small>{{ booking.car.registration_number }}</small>
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Daily Rate</h6>
-                            <p class="mb-0"><strong>${{ booking.daily_rate }}/day</strong></p>
-                        </div>
-                    </div>
-                    
-                    <!-- Dates -->
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Check-in</h6>
-                            <p class="mb-0"><strong>{{ booking.start_date|date:"M d, Y - g:i A" }}</strong></p>
-                            <small>{{ booking.pickup_location }}</small>
-                        </div>
-                        <div class="col-md-6">
-                            <h6 class="text-muted">Check-out</h6>
-                            <p class="mb-0"><strong>{{ booking.end_date|date:"M d, Y - g:i A" }}</strong></p>
-                            <small>{{ booking.return_location }}</small>
-                        </div>
-                    </div>
-                    
-                    <hr>
-                    
-                    <!-- Pricing Summary -->
-                    <div class="row">
-                        <div class="col-md-6 offset-md-6">
-                            <h6 class="text-muted">Rental Duration</h6>
-                            <p class="mb-0">{{ booking.number_of_days }} days</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Cost Breakdown -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Cost Breakdown</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-md-8">Subtotal ({{ booking.number_of_days }} days × ${{ booking.daily_rate }})</div>
-                        <div class="col-md-4 text-end">${{ booking.subtotal }}</div>
-                    </div>
-                    {% if booking.insurance_cost > 0 %}
-                    <div class="row mb-2">
-                        <div class="col-md-8">Insurance</div>
-                        <div class="col-md-4 text-end">${{ booking.insurance_cost }}</div>
-                    </div>
-                    {% endif %}
-                    {% if booking.additional_charges > 0 %}
-                    <div class="row mb-3">
-                        <div class="col-md-8">Additional Charges</div>
-                        <div class="col-md-4 text-end">${{ booking.additional_charges }}</div>
-                    </div>
-                    {% endif %}
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-8"><strong>Total Amount Due</strong></div>
-                        <div class="col-md-4 text-end"><strong class="text-warning">${{ booking.total_cost }}</strong></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Payment Status -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h6 class="text-muted">Payment Status</h6>
-                    <p>
-                        <span class="badge bg-danger">{{ booking.get_payment_status_display }}</span>
-                    </p>
-                    <p class="text-muted small">Payment will be processed before your rental begins.</p>
-                </div>
-            </div>
-            
-            <!-- Next Steps -->
-            <div class="alert alert-info">
-                <h6>What's Next?</h6>
-                <ol class="mb-0">
-                    <li>Review your booking details above</li>
-                    <li>You will receive a confirmation email shortly</li>
-                    <li>Payment link will be sent to your registered email</li>
-                    <li>Please arrive 15 minutes early for pickup</li>
-                </ol>
-            </div>
-            
-            <!-- Actions -->
-            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
-                <a href="{% url 'cars:car_list' %}" class="btn btn-secondary">Continue Shopping</a>
-                <a href="{% url 'cars:dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
-            </div>
-        </div>
+<div class="alert alert-success text-center" role="alert">
+    <h2>✅ تم تأكيد الحجز بنجاح!</h2>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">تفاصيل الحجز</h5>
+        <hr>
+        <p><strong>رقم الحجز:</strong> {{ booking.id }}</p>
+        <p><strong>اسم العميل:</strong> {{ booking.customer_name }}</p>
+        <p><strong>السيارة:</strong> {{ booking.car.name }}</p>
+        <p><strong>من:</strong> {{ booking.start_date }}</p>
+        <p><strong>إلى:</strong> {{ booking.end_date }}</p>
+        <p><strong class="text-danger">المجموع:</strong> {{ booking.total_price }} دج</p>
+        <hr>
+        <a href="{% url 'home' %}" class="btn btn-primary">العودة للرئيسية</a>
+        <a href="{% url 'cars:my_bookings' %}" class="btn btn-info">حجوزاتي</a>
     </div>
 </div>
 {% endblock %}

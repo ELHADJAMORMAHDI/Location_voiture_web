@@ -1,106 +1,43 @@
 {% extends 'base.html' %}
 
-{% block title %}Create Booking - Location Voiture{% endblock %}
+{% block title %}حجز - {{ car.name }}{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="card-title mb-4">New Booking</h3>
-                    
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {{ form.non_field_errors }}
-                        </div>
-                    {% endif %}
-                    
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.car.id_for_label }}" class="form-label">Select Car *</label>
-                                {{ form.car }}
-                                {% if form.car.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.car.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.start_date.id_for_label }}" class="form-label">Check-in Date & Time *</label>
-                                {{ form.start_date }}
-                                {% if form.start_date.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.start_date.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.end_date.id_for_label }}" class="form-label">Check-out Date & Time *</label>
-                                {{ form.end_date }}
-                                {% if form.end_date.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.end_date.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="{{ form.pickup_location.id_for_label }}" class="form-label">Pickup Location *</label>
-                                {{ form.pickup_location }}
-                                {% if form.pickup_location.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.pickup_location.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="{{ form.return_location.id_for_label }}" class="form-label">Return Location *</label>
-                                {{ form.return_location }}
-                                {% if form.return_location.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.return_location.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="{{ form.special_requests.id_for_label }}" class="form-label">Special Requests</label>
-                            {{ form.special_requests }}
-                            <small class="form-text text-muted">Let us know any special requirements (child seat, GPS, etc.)</small>
-                            {% if form.special_requests.errors %}
-                                <div class="invalid-feedback d-block">{{ form.special_requests.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i>
-                            Please review your booking details before submitting. You will be able to confirm and pay after submission.
-                        </div>
-                        
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'cars:car_list' %}" class="btn btn-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Continue to Confirmation</button>
-                        </div>
-                    </form>
-                </div>
+<h1>📅 حجز {{ car.name }}</h1>
+<hr>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" class="card p-4">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="customer_name" class="form-label">اسمك الكامل</label>
+                <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="start_date" class="form-label">تاريخ البداية</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="end_date" class="form-label">تاريخ النهاية</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" required>
+            </div>
+            
+            <button type="submit" class="btn btn-success btn-lg">تأكيد الحجز</button>
+            <a href="{% url 'cars:car_detail' car.pk %}" class="btn btn-secondary btn-lg">إلغاء</a>
+        </form>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ car.name }}</h5>
+                <p><strong>السعر:</strong> {{ car.price_per_day }} دج / يوم</p>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    // Add Bootstrap validation classes
-    document.addEventListener('DOMContentLoaded', function() {
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-            form.classList.add('needs-validation');
-            const fields = form.querySelectorAll('input, select, textarea');
-            fields.forEach(field => {
-                field.classList.add('form-control');
-            });
-        });
-    });
-</script>
 {% endblock %}

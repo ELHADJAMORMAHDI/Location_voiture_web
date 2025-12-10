@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - Location Voiture{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">My Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Name</h6>
+                            <p>{{ user.first_name }} {{ user.last_name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Email</h6>
+                            <p>{{ user.email }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Phone Number</h6>
+                            <p>{{ customer.phone_number }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">City</h6>
+                            <p>{{ customer.city }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Address</h6>
+                            <p>{{ customer.address }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Country</h6>
+                            <p>{{ customer.country }}</p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5 class="mb-3">Driving License</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">License Number</h6>
+                            <p>{{ customer.license_number }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Expiry Date</h6>
+                            <p>
+                                {{ customer.license_expiry|date:"M d, Y" }}
+                                {% if customer.license_expiry < today %}
+                                    <span class="badge bg-danger">Expired</span>
+                                {% else %}
+                                    <span class="badge bg-success">Valid</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5 class="mb-3">Rental Statistics</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Total Rentals</h6>
+                            <p>{{ customer.total_rentals }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Total Amount Spent</h6>
+                            <p>${{ customer.total_spent }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+                    <a href="{% url 'cars:dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

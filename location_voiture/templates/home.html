@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Location Voiture{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Welcome to Location Voiture</h1>
+        <p>Rent your perfect car today</p>
+        <a href="{% url 'cars:car_list' %}" class="btn btn-warning btn-lg">Browse Cars</a>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 bg-white">
+                    <div class="card-body">
+                        <h3 class="text-primary">{{ total_cars }}</h3>
+                        <p class="text-muted">Available Cars</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 bg-white">
+                    <div class="card-body">
+                        <h3 class="text-primary">{{ total_bookings }}</h3>
+                        <p class="text-muted">Happy Customers</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 bg-white">
+                    <div class="card-body">
+                        <h3 class="text-primary">24/7</h3>
+                        <p class="text-muted">Support Available</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Cars Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="mb-4 text-center">Featured Cars</h2>
+        <div class="row">
+            {% for car in featured_cars %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    {% if car.image %}
+                        <img src="{{ car.image.url }}" class="card-img-top" alt="{{ car.make }} {{ car.model }}">
+                    {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="fas fa-car fa-4x text-muted"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car.year }} {{ car.make }} {{ car.model }}</h5>
+                        <p class="card-text text-muted">{{ car.registration_number }}</p>
+                        <div class="mb-3">
+                            <span class="badge bg-primary">{{ car.fuel_type }}</span>
+                            <span class="badge bg-secondary">{{ car.transmission }}</span>
+                            <span class="badge bg-info">{{ car.seats }} Seats</span>
+                        </div>
+                        <h4 class="text-warning">${{ car.daily_rate }}/day</h4>
+                        <a href="{% url 'cars:car_detail' car.id %}" class="btn btn-primary btn-sm w-100">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No cars available at the moment. Please check back later.
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'cars:car_list' %}" class="btn btn-primary btn-lg">View All Cars</a>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="mb-4 text-center">Why Choose Location Voiture?</h2>
+        <div class="row">
+            <div class="col-md-6 col-lg-3 mb-4 text-center">
+                <i class="fas fa-check-circle fa-3x text-primary mb-3"></i>
+                <h5>Best Prices</h5>
+                <p>Competitive rates with flexible payment options</p>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4 text-center">
+                <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                <h5>Insurance Included</h5>
+                <p>Full coverage and peace of mind</p>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4 text-center">
+                <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                <h5>24/7 Support</h5>
+                <p>Always there when you need us</p>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4 text-center">
+                <i class="fas fa-car fa-3x text-primary mb-3"></i>
+                <h5>Wide Selection</h5>
+                <p>Choose from hundreds of vehicles</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5" style="background: linear-gradient(135deg, #2563eb, #1e40af); color: white;">
+    <div class="container text-center">
+        <h2 class="mb-3">Ready to Rent?</h2>
+        <p class="mb-4">Join thousands of satisfied customers who trust Location Voiture</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'cars:car_list' %}" class="btn btn-warning btn-lg">Browse Cars Now</a>
+        {% else %}
+            <a href="{% url 'accounts:signup' %}" class="btn btn-warning btn-lg">Sign Up Now</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

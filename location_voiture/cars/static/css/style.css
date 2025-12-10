@@ -1,0 +1,87 @@
+/* Main Stylesheet for Location Voiture */
+
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --light-gray: #f3f4f6;
+    --dark-gray: #1f2937;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    color: var(--dark-gray);
+}
+
+/* Navbar Customizations */
+.navbar-brand {
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* Cards */
+.card {
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Forms */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+/* Badges */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 6rem 0;
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-gray);
+    color: #e5e7eb;
+    border-top: 2px solid var(--primary-color);
+}
+
+/* Responsive Tables */
+@media (max-width: 768px) {
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .navbar, footer {
+        display: none;
+    }
+}

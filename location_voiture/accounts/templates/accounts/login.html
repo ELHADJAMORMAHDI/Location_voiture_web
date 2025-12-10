@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Location Voiture{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <h3 class="card-title mb-4 text-center">Login</h3>
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">Username *</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback d-block">{{ form.username.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">Password *</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback d-block">{{ form.password.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                        
+                        <p class="text-center text-muted">
+                            Don't have an account? <a href="{% url 'accounts:signup' %}">Sign up</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const fields = form.querySelectorAll('input');
+        fields.forEach(field => {
+            field.classList.add('form-control');
+        });
+    });
+</script>
+{% endblock %}

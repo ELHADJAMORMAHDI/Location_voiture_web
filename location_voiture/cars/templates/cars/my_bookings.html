@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookings - Location Voiture{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">My Bookings</h1>
+    
+    {% if bookings %}
+        <div class="row">
+            {% for booking in bookings %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header {% if booking.status == 'ACTIVE' %}bg-success{% elif booking.status == 'CONFIRMED' %}bg-primary{% elif booking.status == 'COMPLETED' %}bg-secondary{% else %}bg-warning{% endif %} text-white">
+                        <h5 class="mb-0">{{ booking.booking_reference }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Vehicle Info -->
+                        <p class="mb-1">
+                            <strong>{{ booking.car.year }} {{ booking.car.make }} {{ booking.car.model }}</strong><br>
+                            <small class="text-muted">{{ booking.car.registration_number }}</small>
+                        </p>
+                        
+                        <!-- Dates -->
+                        <p class="mb-1">
+                            <i class="fas fa-calendar"></i>
+                            {{ booking.start_date|date:"M d, Y" }} to {{ booking.end_date|date:"M d, Y" }}
+                        </p>
+                        
+                        <!-- Price -->
+                        <p class="mb-3">
+                            <strong class="text-warning">${{ booking.total_cost }}</strong>
+                        </p>
+                        
+                        <!-- Status -->
+                        <div class="mb-3">
+                            <span class="badge bg-primary">{{ booking.get_status_display }}</span>
+                            <span class="badge {% if booking.payment_status == 'PAID' %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ booking.get_payment_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-sm btn-primary">View Details</a>
+                        {% if booking.can_be_cancelled %}
+                            <form method="post" action="{% url 'cars:cancel_booking' booking.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Cancel</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            You don't have any bookings yet.
+            <a href="{% url 'cars:car_list' %}">Browse cars and make your first booking!</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
